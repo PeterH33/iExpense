@@ -16,7 +16,7 @@ struct AddView: View {
     
     @Environment(\.dismiss) var dismiss
     
-    let types = ["Bussiness", "Personal"]
+    let types = ["Business", "Personal"]
     
     
     var body: some View {

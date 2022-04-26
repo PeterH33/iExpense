@@ -4,6 +4,8 @@
 //
 //  Created by Peter Hartnett on 1/21/22.
 //
+//day 76 Challenge
+// Fix the list rows in iExpense so they read out the name and value in one single VoiceOver label, and their type in a hint.
 
 import SwiftUI
 
@@ -42,7 +44,7 @@ struct ContentView: View {
    @StateObject var expenses = Expenses()
     @State private var showingAddExpense = false
     
-    //This does not currently work because when you delete an item from the filtered personalExpenses or bussinessExpenses it is simply using the index and knocking that index off of the full list.
+    //This does not currently work because when you delete an item from the filtered personalExpenses or businessExpenses it is simply using the index and knocking that index off of the full list.
     func removeItems(at offsets: IndexSet){
         expenses.items.remove(atOffsets: offsets)
         
@@ -69,10 +71,10 @@ struct ContentView: View {
         return returnArray
     }
     
-    var bussinessExpenses: [ExpenseItem] {
+    var businessExpenses: [ExpenseItem] {
         var returnArray = [ExpenseItem]()
         for item in expenses.items{
-            if item.type == "Bussiness"{
+            if item.type == "Business"{
                 returnArray.append(item)
             }
         }
@@ -83,31 +85,33 @@ struct ContentView: View {
     var body: some View {
         NavigationView{
             List{
-                //Challenge, split the output here into two sections, one for bussiness and one for personal. s
+                //Challenge, split the output here into two sections, one for business and one for personal. s
                 //So making some calculated properties works to split up the views, trying to put if structures down here made xcode unhappy, the next bit is to make sure that the delete item references are actually pointed at the right thing.
                 
-                Section{
-                ForEach(expenses.items) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.headline)
-                            Text(item.type)
-                        }
-                        
-                        Spacer()
-                        VStack{
-                            Text(item.amount, format: currencyCodeU)
-                                .font(.body)
-                                .foregroundColor(item.amount < 10.0 ? .primary : (item.amount < 100.00 ? .orange : .red))
-                            Text("\(item.id)")
-                        }
-                        
-                    }
-                }//end foreach
-                .onDelete(perform: removeItems)
-                }
+                //This section is for having both personal and business in the same list.
+//                Section{
+//                ForEach(expenses.items) { item in
+//                    HStack {
+//                        VStack(alignment: .leading) {
+//                            Text(item.name)
+//                                .font(.headline)
+//                            Text(item.type)
+//                        }
+//
+//                        Spacer()
+//                        VStack{
+//                            Text(item.amount, format: currencyCodeU)
+//                                .font(.body)
+//                                .foregroundColor(item.amount < 10.0 ? .primary : (item.amount < 100.00 ? .orange : .red))
+//                            Text("\(item.id)")
+//                        }
+//
+//                    }
+//                }//end foreach
+//                .onDelete(perform: removeItems)
+//                }
                 
+                //personal list
                 Section{
                     ForEach(personalExpenses) { item in
                         HStack {
@@ -122,10 +126,14 @@ struct ContentView: View {
                                 Text(item.amount, format: currencyCodeU)
                                     .font(.body)
                                     .foregroundColor(item.amount < 10.0 ? .primary : (item.amount < 100.00 ? .orange : .red))
-                                Text("\(item.id)")
+                                //Text("\(item.id)")
                             }
                             
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel(" \(item.name) \(item.amount, format: currencyCodeU)")
+                        .accessibilityHint("\(item.type)")
+                        
                     }//end foreach
                     .onDelete{thingy in
                         for index in thingy{
@@ -135,9 +143,9 @@ struct ContentView: View {
                     }//end onDelete
                 }//end section 2
                 
-                
+                //business list
                 Section{
-                    ForEach(bussinessExpenses) { item in
+                    ForEach(businessExpenses) { item in
                         HStack {
                             VStack(alignment: .leading) {
                                 Text(item.name)
@@ -150,16 +158,19 @@ struct ContentView: View {
                                 Text(item.amount, format: currencyCodeU)
                                     .font(.body)
                                     .foregroundColor(item.amount < 10.0 ? .primary : (item.amount < 100.00 ? .orange : .red))
-                                Text("\(item.id)")
+                              //  Text("\(item.id)")
                             }
                             
                         }
+                        .accessibilityElement()
+                        .accessibilityLabel(" \(item.name) \(item.amount, format: currencyCodeU)")
+                        .accessibilityHint("\(item.type)")
                     }//end foreach
                     .onDelete{thingy in
                         for index in thingy{
-//                            print(bussinessExpenses[index].id)
+//                            print(businessExpenses[index].id)
 //                            print(expenses.items[index].id)
-                            removeItemsB(id: bussinessExpenses[index].id)
+                            removeItemsB(id: businessExpenses[index].id)
                         }
                     }//end onDelete
                 }//end section 3
