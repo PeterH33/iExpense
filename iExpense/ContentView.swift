@@ -20,7 +20,7 @@ struct ExpenseItem: Identifiable, Codable{ //making it conform to identifiable l
 
 class Expenses: ObservableObject{
     init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") { //check for our "Items" key in userdefaults
+        if let savedItems = UserDefaults.standard.data(forKey: "Items") { //check for our "Items" key in userDefaults
             if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {// make a decoder and have it do decoding
                 items = decodedItems //assign that array to items
                 return
@@ -30,7 +30,7 @@ class Expenses: ObservableObject{
         items = [] // if fails, then just make items [] empty
     }
     @Published var items = [ExpenseItem]() {
-        didSet { //note, xcode seems to not want to auto complete didSet at all, watch out for that
+        didSet { //note, Xcode seems to not want to auto complete didSet at all, watch out for that
             if let encoded = try? JSONEncoder().encode(items) {
                 UserDefaults.standard.set(encoded, forKey: "Items")
             }
@@ -50,7 +50,7 @@ struct ContentView: View {
         
     }
     
-    //TODO 0000000 This function needs to work by getting some id reference from the filtered calculated expenseitem arrays and delete that id in the base array. just not sure how to do that at this moment.
+    //TODO 0000000 This function needs to work by getting some id reference from the filtered calculated expenseItem arrays and delete that id in the base array. just not sure how to do that at this moment.
     
     func removeItemsB(id: UUID){
         //expenses.items.remove(at: <#T##Int#>)
@@ -86,7 +86,7 @@ struct ContentView: View {
         NavigationView{
             List{
                 //Challenge, split the output here into two sections, one for business and one for personal. s
-                //So making some calculated properties works to split up the views, trying to put if structures down here made xcode unhappy, the next bit is to make sure that the delete item references are actually pointed at the right thing.
+                //So making some calculated properties works to split up the views, trying to put if structures down here made Xcode unhappy, the next bit is to make sure that the delete item references are actually pointed at the right thing.
                 
                 //This section is for having both personal and business in the same list.
 //                Section{
@@ -191,7 +191,7 @@ struct ContentView: View {
         }//End navigation view
         .sheet(isPresented: $showingAddExpense){
             AddView(expenses: expenses)
-            //show an addview here
+            //show an add view here
         }
     }//end var body
 }//end content view struct
